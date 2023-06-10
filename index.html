@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Validation</title>
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+    <div class="background">
+        <div class="shape"></div>
+        <div class="shape"></div>
+    </div>
+    <div class="container">
+        <form action="" class="form" id="form-1">
+            <h3>Sign up</h3>
+
+            <div class="spacer"></div>
+
+            <div class="form-group">
+                <label for="username" class="form-label">Username</label>
+                <input type="text" name="username" rules="required" id="username" placeholder="eg: mai_anh" class="form-control">
+                <span class="error-message"></span> 
+            </div>
+            <div class="form-group">
+                <label for="email" class="form-label">Email</label>
+                <input type="text" name="email" rules="required|email" id="email" class="form-control" placeholder="eg: maianh@gmail.com">
+                <span class="error-message"></span>
+            </div>
+            <div class="form-group">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" name="password" rules="required|min:6" id="password" class="form-control" placeholder="enter password">
+                <span class="error-message"></span>
+            </div>
+            <div class="form-group">
+                <label for="password_confirmation" class="form-label">Confirm Password</label>
+                <input type="password" name="password_confirmation" rules="required" id="password_confirmation" class="form-control" placeholder="reenter password">
+                <span class="error-message"></span>
+            </div>
+            <!-- <div class="form-group">
+                <label for="avatar" class="form-label">Ảnh đại diện</label>
+                <input type="file" name="avatar" rules="required" id="avatar" class="form-control">
+                <span class="error-message"></span>
+            </div> -->
+            <!-- <div class="form-group">
+                <label for="province" class="form-label">Tỉnh/TP</label>
+                <select name="province" rules="required" id="province" class="form-control">
+                    <option value="">--Chọn tỉnh/TP--</option>
+                    <option value="HN">Hà Nội</option>
+                    <option value="HCM">Hồ Chí Minh</option>
+                    <option value="DN">Đà Nẵng</option>
+                </select>
+                <span class="error-message"></span>
+            </div> -->
+            <div class="form-group">
+                <div class="horizontal">
+                    <label for="gender" class="form-label">Gender</label>
+                    <div class="input-group">
+                        <input type="radio" value="male" name="gender" rules="required" class="" >
+                        Male
+                    </div > 
+                    <div class="input-group">  
+                        <input type="radio" value="female" name="gender" rules="required" class="" >
+                        Female
+                    </div> 
+                    <div class="input-group">  
+                        <input type="radio" value="other" name="gender" rules="required"class="" >
+                        Other
+                    </div> 
+                </div>       
+                <span class="error-message"></span>
+            </div>
+
+            <button class="form-submit">Sign up</button>
+        </form>
+    </div>
+
+
+    <script src="./validator2.js"></script>
+    <script>
+        // Mong muốn đạt được ==> output là gì
+        var form = new Validator('#form-1');
+        form.onSubmit = function(data){
+            console.log(data);
+        }
+    </script>
+
+
+    <!-- sử dụng thư viện validator cách 1 -->
+    <!-- <script src="./validator.js"></script>
+    <script>
+        // Mong muốn khi sd thư viện validator
+        Validator({
+            form: '#form-1',
+            formGroupSelector: '.form-group',
+            errorSelector: '.error-message',
+            rules: [
+                Validator.isRequired('#username'),
+                Validator.isRequired('#email'),
+                Validator.isEmail('#email'),
+                Validator.isRequired('input[name="gender"]'),
+                Validator.isRequired('#avatar'),
+                Validator.isRequired('#province'),
+                Validator.isRequired('#password'),
+                Validator.minLength('#password', 6),
+                Validator.isRequired('#password_confirmation'),
+                Validator.isConfirmed('#password_confirmation', function(){
+                    // Nếu value của password_confirmation trùng với value của password thì trả về true
+                    return document.querySelector('#form-1 #password').value;
+                }, "Password confirmation doesn't match")
+            ],
+            onSubmit: function(data){
+                // call API
+                console.log(data);
+            }
+        });
+    </script> -->
+</body>
+</html>
