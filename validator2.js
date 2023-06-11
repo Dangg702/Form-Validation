@@ -1,7 +1,8 @@
 // Khi người dùng khai báo với từ khóa new thì hàm Validator đóng vai trò là 1 contructor function
 // từ khóa this nằm trong constructor func sẽ tương đương với obj mà hàm này tạo ra
 function Validator(formSelector){
-    var _this = this;
+    var _this = this; // đây là cách xử lý của ES5
+
     // tạo ra 1 obj chứa tất cả các rules
     var formRules = {};
 
@@ -25,15 +26,23 @@ function Validator(formSelector){
         min: function(min){
             return function(value){
                 var regex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{6,}$/;
-                return (regex.test(value)) ? undefined : `This field must be greater than ${min} characters and contain at least one uppercase letter, one lowercase letter, one number`;
+                return (regex.test(value) && value.length >= min) ? undefined : `This field must be greater than ${min} characters and contain at least one uppercase letter, one lowercase letter, one number`;
             }
         },
-        // confirmed: function(getConfirmValue){
-        //     return function(value, isTyping){
-        //         return (value === getConfirmValue() || isTyping == true) ? undefined : "Input value does not match";
-        //     }
-        // }
-
+        max: function(max){
+            return function(value){
+                var regex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{6,}$/;
+                return (regex.test(value) && value.length <= max) ? undefined : `This field must be less than ${max} characters and contain at least one uppercase letter, one lowercase letter, one number`;
+            }
+        },
+        confirmed: function(selector){
+            var confirmElement = document.querySelector(formSelector + ' ' + selector);
+            if(confirmElement){
+                return function(value){
+                    return (value === confirmElement.value) ? undefined : "Input value does not match";
+                }
+            }
+        }
     };
 
     var formElement = document.querySelector(formSelector);
@@ -81,7 +90,15 @@ function Validator(formSelector){
             var errorMessage; 
 
             for (rule of rules){
-                errorMessage = rule(event.target.value);
+                switch (event.target.type) {
+                    case 'radio':
+                    case 'checkbox':
+                        var inputChecked = formElement.querySelector(`input[name="${event.target.name}"][rules]:checked`)
+                        errorMessage = rule(inputChecked)
+                        break;
+                    default:
+                        errorMessage = rule(event.target.value)
+                }
                 if(errorMessage) break;
             }
 
@@ -111,7 +128,7 @@ function Validator(formSelector){
     }
 
     // Xử lý hành vi submit form
-    formElement.onsubmit = function(event){
+    formElement.onsubmit = function (event){
         event.preventDefault();
         var inputs = formElement.querySelectorAll('[name][rules]');
         var isValid = true;
@@ -151,6 +168,7 @@ function Validator(formSelector){
                 _this.onSubmit(formValues);
 
             }else{
+                // hành vi mặc định của browser
                 formElement.submit();
             }
         }
