@@ -1,7 +1,7 @@
 // Khi người dùng khai báo với từ khóa new thì hàm Validator đóng vai trò là 1 contructor function
 // từ khóa this nằm trong constructor func sẽ tương đương với obj mà hàm này tạo ra
 function Validator(formSelector){
-    var _this = this; // đây là cách xử lý của ES5
+    //var _this = this; // đây là cách xử lý của ES5
 
     // tạo ra 1 obj chứa tất cả các rules
     var formRules = {};
@@ -128,7 +128,7 @@ function Validator(formSelector){
     }
 
     // Xử lý hành vi submit form
-    formElement.onsubmit = function (event){
+    formElement.onsubmit = (event) =>{
         event.preventDefault();
         var inputs = formElement.querySelectorAll('[name][rules]');
         var isValid = true;
@@ -140,7 +140,7 @@ function Validator(formSelector){
 
         // Khi không có lỗi thì submit form
         if(isValid){
-            if(typeof _this.onSubmit === 'function'){
+            if(typeof this.onSubmit === 'function'){
                 var enableInputs = formElement.querySelectorAll('[name]');
                 var formValues = Array.from(enableInputs).reduce(function(values, input){
                     switch(input.type){
@@ -165,7 +165,7 @@ function Validator(formSelector){
                     }
                     return values;
                 }, {});
-                _this.onSubmit(formValues);
+                this.onSubmit(formValues);
 
             }else{
                 // hành vi mặc định của browser
